@@ -51,7 +51,7 @@ const TriangleDisplay = () => {
   const pathD = `M ${A.x - centerX} ${A.y - centerY} L ${B.x - centerX} ${B.y - centerY} L ${C.x - centerX} ${
     C.y - centerY
   } Z`;
-  const circleRadius = 5;
+  const circleRadius = 2;
   const padding = 40;
 
   return (
