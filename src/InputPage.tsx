@@ -43,7 +43,6 @@ function InputPage() {
           />
         </Grid>
       </Grid>
-      {/* Point B */}
       <Grid container direction="row" spacing={2} alignItems="center">
         <Grid>
           <Typography variant="h6">Point B</Typography>
@@ -65,7 +64,6 @@ function InputPage() {
           />
         </Grid>
       </Grid>
-      {/* Point C */}
       <Grid container direction="row" spacing={2} alignItems="center">
         <Grid>
           <Typography variant="h6">Point C</Typography>
@@ -87,7 +85,6 @@ function InputPage() {
           />
         </Grid>
       </Grid>
-      {/* Submit Button */}
       <Grid>
         <Button variant="contained" color="primary" onClick={handleSubmit}>
           Show Triangle
