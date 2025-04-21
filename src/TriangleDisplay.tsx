@@ -2,7 +2,7 @@ import { useLocation } from 'react-router-dom';
 import { Typography } from '@mui/material';
 import { Point } from './interfaces/Point';
 
-function TriangleDisplay() {
+const TriangleDisplay = () => {
   const location = useLocation();
   const points: Point[] = location.state?.points || [];
 
@@ -21,30 +21,62 @@ function TriangleDisplay() {
   const angleB = Math.acos((a ** 2 + c ** 2 - b ** 2) / (2 * a * c)) * (180 / Math.PI);
   const angleC = Math.acos((a ** 2 + b ** 2 - c ** 2) / (2 * a * b)) * (180 / Math.PI);
 
-  const pathD = `M ${A.x} ${A.y} L ${B.x} ${B.y} L ${C.x} ${C.y} Z`;
+  const minX = Math.min(A.x, B.x, C.x);
+  const maxX = Math.max(A.x, B.x, C.x);
+  const minY = Math.min(A.y, B.y, C.y);
+  const maxY = Math.max(A.y, B.y, C.y);
+  const width = maxX - minX;
+  const height = maxY - minY;
+  const centerX = (minX + maxX) / 2;
+  const centerY = (minY + maxY) / 2;
+
+  const getVertexOffset = (vertex: Point) => {
+    const centroid = {
+      x: (A.x + B.x + C.x) / 3,
+      y: (A.y + B.y + C.y) / 3,
+    };
+    const dx = vertex.x - centroid.x;
+    const dy = vertex.y - centroid.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    return {
+      x: (dx / dist) * 20,
+      y: (dy / dist) * 20,
+    };
+  };
+
+  const offsetA = getVertexOffset(A);
+  const offsetB = getVertexOffset(B);
+  const offsetC = getVertexOffset(C);
+
+  const pathD = `M ${A.x - centerX} ${A.y - centerY} L ${B.x - centerX} ${B.y - centerY} L ${C.x - centerX} ${
+    C.y - centerY
+  } Z`;
   const circleRadius = 5;
-  const textOffset = 10;
+  const padding = 40;
 
   return (
     <div style={{ textAlign: 'center', padding: '20px' }}>
       <Typography variant="h4">The Triangle</Typography>
-      <svg width={'100%'} height={'100%'} style={{ border: '1px solid black', marginTop: '20px' }}>
+      <svg
+        viewBox={`${-width / 2 - padding} ${-height / 2 - padding} ${width + 2 * padding} ${height + 2 * padding}`}
+        style={{ border: '1px solid black', marginTop: '20px', maxWidth: '600px', maxHeight: '600px' }}
+      >
         <path d={pathD} fill="none" stroke="black" />
-        <circle cx={A.x} cy={A.y} r={circleRadius} fill="red" />
-        <circle cx={B.x} cy={B.y} r={circleRadius} fill="red" />
-        <circle cx={C.x} cy={C.y} r={circleRadius} fill="red" />
-        <text x={A.x + textOffset} y={A.y} fill="black">
+        <circle cx={A.x - centerX} cy={A.y - centerY} r={circleRadius} fill="red" />
+        <circle cx={B.x - centerX} cy={B.y - centerY} r={circleRadius} fill="red" />
+        <circle cx={C.x - centerX} cy={C.y - centerY} r={circleRadius} fill="red" />
+        <text x={A.x - centerX + offsetA.x} y={A.y - centerY + offsetA.y} fill="black" textAnchor="middle" fontSize={7}>
           {angleA.toFixed(2)}°
         </text>
-        <text x={B.x + textOffset} y={B.y} fill="black">
+        <text x={B.x - centerX + offsetB.x} y={B.y - centerY + offsetB.y} fill="black" textAnchor="middle" fontSize={7}>
           {angleB.toFixed(2)}°
         </text>
-        <text x={C.x + textOffset} y={C.y} fill="black">
+        <text x={C.x - centerX + offsetC.x} y={C.y - centerY + offsetC.y} fill="black" textAnchor="middle" fontSize={7}>
           {angleC.toFixed(2)}°
         </text>
       </svg>
     </div>
   );
-}
+};
 
 export default TriangleDisplay;
